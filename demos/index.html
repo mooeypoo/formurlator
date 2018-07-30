@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>formURLator Demos</title>
+  <meta name="description" content="formURLator demo">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <link rel="stylesheet" href="demo.css">
+  <!-- Dependencies -->
+  <!-- <script src="../dist/urlProcessor.oojs.min.js"></script> -->
+  <script src="../node_modules/oojs/dist/oojs.js"></script>
+  <script src="../src/urlp.js"></script>
+  <script src="../src/urlp.Parameter.js"></script>
+  <script src="../src/urlp.Element.js"></script>
+  <script src="../src/urlp.Model.js"></script>
+  <script src="../src/urlp.View.js"></script>
+  <script src="../src/urlp.Controller.js"></script>
+
+  <script>
+	// document.addEventListener( 'DOMContentLoaded', function( event ) {
+	// 	var stopAllButton = document.getElementById( 'demo-action-stop-all' ),
+	// 		isStopped = false,
+	//
+	// 	formurlator.add( {
+	// 		firstName: document.getElementById( 'demo-firstName' ),
+	// 		lastName: document.getElementById( 'demo-lastName' ),
+	// 		age: {
+	// 			element: document.getElementById( 'demo-age' ),
+	// 			range: {
+	// 				min: 5,
+	// 				max: 120
+	// 			}
+	// 		},
+	// 		color: document.getElementById( 'demo-color' )
+	// 	} );
+	//
+	// 	// Add later
+	// 	formurlator.add( {
+	// 		drive: document.getElementById( 'demo-drive' ),
+	// 		like: document.getElementById( 'demo-like' )
+	// 	} );
+	// 	formurlator.start();
+	//
+	// 	stopAllButton.onclick = function () {
+	// 		isStopped = !isStopped;
+	//
+	// 		stopAllButton.textContent = isStopped ?
+	// 			'Start synchronizing URL' :
+	// 			'Stop syncrhonizing URL';
+	//
+	// 		if ( isStopped ) {
+	// 			formurlator.stop();
+	// 		} else {
+	// 			formurlator.start();
+	// 		}
+	// 	};
+	// } );
+  </script>
+</head>
+<body>
+	<h1>formurlator demo</h1>
+
+	<div class="urlp-demo">
+		<p>Your name: <input id="demo-firstName" type="text" placeholder="First name"> <input id="demo-lastName" type="text" placeholder="Last name"></p>
+		<p>Your age: <input id="demo-age" type="number"><small>(Number between 5 and 120)</smal></p>
+		<p>Favorite color:
+			<select id="demo-color">
+				<option value="yellow">Yellow</option>
+				<option value="green" selected>Green</option>
+				<option value="blue">Blue</option>
+				<option value="red">Red</option>
+			</select>
+		</p>
+		<p>Commute:
+			<select id="demo-commute" multiple>
+				<option value="car">Car</option>
+				<option value="bus" selected>Bus</option>
+				<option value="subway">Subway</option>
+				<option value="bike">Bike</option>
+			</select>
+		</p>
+		<p><input id="demo-like" type="checkbox" checked><label for="demo-like">I like this</label></p>
+		<p>I work best
+			<input id="demo-workpref-day" name="workpref" value="day" type="radio"><label for="demo-workpref-day">During the day</label>
+			<input id="demo-workpref-night" name="workpref" value="night" type="radio"><label for="demo-workpref-night">During the night</label>
+			<input id="demo-workpref-dontcare" name="workpref" value="any" type="radio"><label for="demo-workpref-dontcare">Anytime</label>
+		</p>
+		<p><button id="demo-action-stop-all">Stop syncrhonizing URL</button></p>
+	</div>
+</body>
+</html>

@@ -1,0 +1,36 @@
+{
+  "name": "formurlator",
+  "version": "0.1.0",
+  "description": "A system to connect form input elements to URL query and synchronize them",
+  "scripts": {
+    "test": "grunt test"
+  },
+  "repository": "https://github.com/mooeypoo/formurlator",
+  "bugs": "https://github.com/mooeypoo/formurlator/issues",
+  "license": "GPL-3.0-or-later",
+  "keywords": [
+    "url",
+    "DOM"
+  ],
+  "author": {
+    "name": "Moriel Schottlender",
+    "email": "mooeypoo@gmail.com",
+    "url": "http://moriel.smarterthanthat.com"
+  },
+  "devDependencies": {
+    "coveralls": "^3.0.0",
+    "eslint-config-wikimedia": "^0.5.0",
+    "grunt": "^1.0.2",
+    "grunt-contrib-concat": "^1.0.1",
+    "grunt-contrib-qunit": "^2.0.0",
+    "grunt-contrib-uglify": "^3.3.0",
+    "grunt-eslint": "20.1.0",
+    "jquery": "^3.3.1",
+    "qunit": "^2.6.1",
+    "stylelint": "8.2.0",
+    "stylelint-config-wikimedia": "0.4.2"
+  },
+  "dependencies": {
+    "oojs": "^2.2.2"
+  }
+}
