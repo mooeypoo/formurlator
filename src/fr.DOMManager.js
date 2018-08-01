@@ -1,4 +1,13 @@
 ( function () {
+	/**
+	 * DOM Manager class, manages the element models
+	 *
+	 * @class
+	 * @mixin OO.EventEmitter
+	 * @mixin OO.EmitterList
+	 *
+	 * @constructor
+	 */
 	fr.DOMManager = function FrDOMManager() {
 		// Mixin constructor
 		OO.EventEmitter.call( this );

@@ -1,4 +1,16 @@
 ( function () {
+	/**
+	 * Element model, wrapping the behavior of DOM elements
+	 *
+	 * @class
+	 * @mixin OO.EventEmitter
+	 *
+	 * @constructor
+	 * @param {Element} DOMElement The DOM element or an array
+	 *  of DOM elements that are grouped, like a group of
+	 *  checkboxes or a group of radio inputs.
+	 * @param {string} [name] Element name
+	 */
 	fr.Element = function FrElement( DOMElement, name ) {
 		var i, options,
 			that = this;
