@@ -4,8 +4,14 @@
 		OO.EventEmitter.call( this );
 		OO.EmitterList.call( this );
 
-		this.aggregate( { update: 'elementUpdate' } );
-		this.connect( this, { elementUpdate: 'onElementUpdate' } );
+		this.aggregate( {
+			update: 'elementUpdate',
+			active: 'elementActive'
+		} );
+		this.connect( this, {
+			elementUpdate: 'onElementUpdate',
+			elementActive: 'onElementActive'
+		} );
 	};
 
 	/* Initialization */
@@ -18,20 +24,31 @@
 
 	/**
 	 * @event update
-	 * @param {Object} Object representing the name and value of the updated value
+	 * @param {string} name Element name
+	 * @param {string|number|boolean} value Element value
 	 *
 	 * An element's value has changed
+	 */
+
+	/**
+	 * @event active
+	 * @param {string} name Element name
+	 * @param {boolean} isActive Element is active
+	 *
+	 * An element's active state was changed
 	 */
 
 	/* Methods */
 
 	fr.DOMManager.prototype.onElementUpdate = function ( element, value ) {
-		var obj = {};
-
-		obj[ element.getName() ] = value;
-		this.emit( 'update', obj );
+		if ( element.isActive() ) {
+			this.emit( 'update', element.getName(), value );
+		}
 	};
 
+	fr.DOMManager.prototype.onElementActive = function ( element, isActive ) {
+		this.emit( 'active', element.getName(), isActive );
+	};
 	/**
 	 * Get the current full state of the element values
 	 *
@@ -74,14 +91,29 @@
 		return null;
 	};
 
+	/**
+	 * Stop following an element, or all elements
+	 *
+	 * @param  {string} [name] Element name
+	 */
 	fr.DOMManager.prototype.stop = function ( name ) {
 		this.toggle( false, name );
 	};
 
+	/**
+	 * Start following an element, or all elements
+	 *
+	 * @param  {string} [name] Element name
+	 */
 	fr.DOMManager.prototype.start = function ( name ) {
 		this.toggle( true, name );
 	};
 
+	/**
+	 * Toggle following an element, or all elements
+	 * @param {boolean} [isActive] Element (or all) are active
+	 * @param {string} [name] Element name
+	 */
 	fr.DOMManager.prototype.toggle = function ( isActive, name ) {
 		var el;
 
@@ -98,12 +130,23 @@
 		}
 	};
 
+	/**
+	 * Get an element model by its name
+	 *
+	 * @param {string} name Element name
+	 * @return {fr.Element|null} Element or null if not found
+	 */
 	fr.DOMManager.prototype.getElementByName = function ( name ) {
 		return this.getItems().filter( function ( element ) {
 			return element.getName() === name;
-		} )[ 0 ];
+		} )[ 0 ] || null;
 	};
 
+	/**
+	 * Get all the active items
+	 *
+	 * @return {fr.Element[]} An array of active elements
+	 */
 	fr.DOMManager.prototype.getActiveItems = function () {
 		return this.getItems().filter( function ( element ) {
 			return element.isActive();

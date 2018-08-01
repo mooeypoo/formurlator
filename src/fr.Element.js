@@ -255,7 +255,11 @@
 
 	fr.Element.prototype.toggle = function ( isActive ) {
 		isActive = isActive === undefined ? !this.active : !!isActive;
-		this.active = isActive;
+
+		if ( this.active !== isActive ) {
+			this.active = isActive;
+			this.emit( 'active', this.active );
+		}
 	};
 
 	fr.Element.prototype.isActive = function () {
