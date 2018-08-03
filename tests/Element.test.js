@@ -433,6 +433,93 @@
 		} );
 	} );
 
+	QUnit.test( 'getDetails', function ( assert ) {
+		var cases = [
+			{
+				name: 'name',
+				element: $name.clone()[ 0 ],
+				expected: {
+					type: 'text'
+				}
+			},
+			{
+				name: 'age',
+				element: $age.clone()[ 0 ],
+				expected: {
+					type: 'number',
+					range: {
+						min: null,
+						max: null
+					}
+				}
+			},
+			{
+				name: 'ageWithBothLimits',
+				element: $ageWithBothLimits.clone()[ 0 ],
+				expected: {
+					type: 'number',
+					range: {
+						min: 10,
+						max: 120
+					}
+				}
+			},
+			{
+				name: 'color',
+				element: $color.clone()[ 0 ],
+				expected: {
+					type: 'select-one',
+					options: [ 'yellow', 'green', 'blue', 'red' ],
+					separator: ','
+				}
+			},
+			{
+				name: 'transit',
+				element: $transit.clone()[ 0 ],
+				expected: {
+					type: 'select-multiple',
+					options: [ 'car', 'bus', 'subway', 'bike' ],
+					separator: ','
+				}
+			},
+			{
+				name: 'like',
+				element: $like.clone()[ 0 ],
+				expected: {
+					type: 'checkbox'
+				}
+			},
+			{
+				name: 'workpref',
+				element: workprefArray.slice( 0 ),
+				expected: {
+					type: 'radio-group',
+					options: [ 'day', 'night', 'any' ],
+					separator: ','
+				}
+			},
+			{
+				name: 'clothes',
+				element: clothesArray.slice( 0 ),
+				expected: {
+					type: 'checkbox-group',
+					options: [ 'jeans', 'flanel', 'cotton' ],
+					separator: ','
+				}
+			}
+		];
+
+		cases.forEach( function ( testCase ) {
+			var element = new fr.Element( testCase.element, testCase.name );
+
+			assert.deepEqual(
+				element.getDetails(),
+				testCase.expected,
+				'Correct details for type ' + element.getType()
+			);
+		} );
+	} );
+
 	QUnit.test( 'Update event', function ( assert ) {
 		var cases = [
 			{

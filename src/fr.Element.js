@@ -21,7 +21,7 @@
 
 		this.name = name;
 		this.element = DOMElement;
-		this.active = true;
+		this.active = false;
 
 		this.cachedValue = null;
 		this.options = [];
@@ -93,6 +93,35 @@
 	/* Methods */
 
 	/**
+	 * Get the element details
+	 *
+	 * @return {Object} Object representing element details
+	 */
+	fr.Element.prototype.getDetails = function () {
+		var result = { type: this.getType() };
+
+		switch ( this.getType() ) {
+			case 'number':
+				result.range = {
+					min: this.element.min !== '' ? Number( this.element.min ) : null,
+					max: this.element.max !== '' ? Number( this.element.max ) : null
+				};
+				break;
+			case 'radio-group':
+			case 'checkbox-group':
+			case 'select-one':
+			case 'select-multiple':
+				result.options = this.getOptionValues();
+				// TODO: Make this configurable
+				result.separator = ',';
+				break;
+			// Not represented: checkbox, text
+		}
+
+		return result;
+	};
+
+	/**
 	 * Set element value
 	 *
 	 * @param {string|boolean|number} newValue [description]
@@ -159,22 +188,24 @@
 			case 'checkbox':
 				return this.element.checked;
 			case 'checkbox-group':
-				return this.element.filter( function ( check ) {
-					return check.checked;
-				} ).map( function ( check ) {
-					return check.value;
-				} );
+				return this.element
+					.filter( function ( check ) {
+						return check.checked;
+					} )
+					.map( function ( check ) {
+						return check.value;
+					} );
 			case 'radio-group':
-				selected = this.element.filter( function ( radio ) {
-					return radio.checked;
-				} )[ 0 ];
-				return selected ? selected.value : '';
+				selected = this.element
+					.filter( function ( radio ) {
+						return radio.checked;
+					} )[ 0 ];
+				return selected ? selected.value : this.optionValues[ 0 ];
 			case 'text':
 			case 'select-one':
 			default: // Assuming type 'string', where input allows freetext
 				return this.element.value;
 		}
-
 	};
 
 	/**

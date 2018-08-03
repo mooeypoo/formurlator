@@ -19,14 +19,14 @@
 				'</select>',
 			like: '<input id="like" type="checkbox" checked>',
 			workpref: [
-				$.parseHTML( '<input id="workpref-day" name="workpref" value="day" type="radio">' )[ 0 ],
-				$.parseHTML( '<input id="workpref-night" name="workpref" value="night" type="radio">' )[ 0 ],
-				$.parseHTML( '<input id="workpref-any" name="workpref" value="any" type="radio">' )[ 0 ]
+				'<input id="workpref-day" name="workpref" value="day" type="radio">',
+				'<input id="workpref-night" name="workpref" value="night" type="radio">',
+				'<input id="workpref-any" name="workpref" value="any" type="radio">'
 			],
 			clothes: [
-				$.parseHTML( '<input id="clothes-jeans" name="clothes" value="jeans" type="checkbox">' )[ 0 ],
-				$.parseHTML( '<input id="clothes-flanel" name="clothes" value="flanel" type="checkbox">' )[ 0 ],
-				$.parseHTML( '<input id="clothes-cotton" name="clothes" value="cotton" type="checkbox">' )[ 0 ]
+				'<input id="clothes-jeans" name="clothes" value="jeans" type="checkbox">',
+				'<input id="clothes-flanel" name="clothes" value="flanel" type="checkbox">',
+				'<input id="clothes-cotton" name="clothes" value="cotton" type="checkbox">'
 			]
 		},
 		initialState = {
@@ -40,6 +40,20 @@
 			like: true, // Initial checked
 			workpref: 'day', // None selected; select the first option
 			clothes: [] // None selected
+		},
+		getDOMfromItemDefinition = function ( name ) {
+			var result;
+			if ( Array.isArray( itemsDefinition[ name ] ) ) {
+				result = [];
+				itemsDefinition[ name ].forEach( function ( el ) {
+					var element = $.parseHTML( el )[ 0 ];
+					result.push( element.cloneNode( true ) );
+				} );
+				return result;
+			} else {
+				result = $.parseHTML( itemsDefinition[ name ] )[ 0 ];
+				return result.cloneNode( true );
+			}
 		};
 
 	QUnit.module( 'fr.DOMManager' );
@@ -48,7 +62,7 @@
 		var cases = [
 			{
 				values: {},
-				expectedState: $.extend( true, {}, initialState ),
+				expectedState: $.extend( true, {}, {}, initialState ),
 				msg: 'Initial state'
 			},
 			{
@@ -75,15 +89,14 @@
 
 			// Add items
 			Object.keys( itemsDefinition ).forEach( function ( name ) {
-				var dom = Array.isArray( itemsDefinition[ name ] ) ?
-					itemsDefinition[ name ] :
-					$.parseHTML( itemsDefinition[ name ] )[ 0 ];
+				var dom = getDOMfromItemDefinition( name );
 
 				items.push(
 					new fr.Element( dom, name )
 				);
 			} );
 			manager.addItems( items );
+			manager.start(); // Start all; we're testing the state response
 
 			// Change values
 			manager.setValues( testCase.values );
@@ -103,20 +116,24 @@
 
 		// Add all items
 		Object.keys( itemsDefinition ).forEach( function ( name ) {
-			var dom = Array.isArray( itemsDefinition[ name ] ) ?
-				itemsDefinition[ name ] :
-				$.parseHTML( itemsDefinition[ name ] )[ 0 ];
+			var dom = getDOMfromItemDefinition( name ),
+				item = new fr.Element( dom, name );
 
-			items.push(
-				new fr.Element( dom, name )
-			);
+			items.push( item );
 		} );
 		manager.addItems( items );
 
 		assert.deepEqual(
 			manager.getState(),
+			{},
+			'Initially, all items are off'
+		);
+
+		manager.start();
+		assert.deepEqual(
+			manager.getState(),
 			initialState,
-			'Initially, all items are represented in state'
+			'When manager.start() is sent, all items are active in the state'
 		);
 
 		// Stop one item
@@ -144,6 +161,81 @@
 		);
 	} );
 
+	QUnit.test( 'getDetails', function ( assert ) {
+		var manager = new fr.DOMManager(),
+			items = [];
+
+		// Add all items
+		Object.keys( itemsDefinition ).forEach( function ( name ) {
+			var dom = getDOMfromItemDefinition( name );
+
+			items.push(
+				new fr.Element( dom, name )
+			);
+		} );
+		manager.addItems( items );
+		manager.start();
+
+		assert.deepEqual(
+			manager.getDetails(),
+			{
+				name: { type: 'text' },
+				age: {
+					type: 'number',
+					range: {
+						min: null,
+						max: null
+					}
+				},
+				ageWithBothLimits: {
+					type: 'number',
+					range: {
+						min: 10,
+						max: 120
+					}
+				},
+				ageWithMaxLimit: {
+					type: 'number',
+					range: {
+						min: null,
+						max: 120
+					}
+				},
+				ageWithMinLimit: {
+					type: 'number',
+					range: {
+						min: 10,
+						max: null
+					}
+				},
+				color: {
+					type: 'select-one',
+					options: [ 'yellow', 'green', 'blue', 'red' ],
+					separator: ','
+				},
+				transit: {
+					type: 'select-multiple',
+					options: [ 'car', 'bus', 'subway', 'bike' ],
+					separator: ','
+				},
+				like: {
+					type: 'checkbox'
+				},
+				workpref: {
+					type: 'radio-group',
+					options: [ 'day', 'night', 'any' ],
+					separator: ','
+				},
+				clothes: {
+					type: 'checkbox-group',
+					options: [ 'jeans', 'flanel', 'cotton' ],
+					separator: ','
+				}
+			},
+			'Element details outputted successfully'
+		);
+	} );
+
 	QUnit.test( 'Events', function ( assert ) {
 		var events = [],
 			manager = new fr.DOMManager(),
@@ -151,16 +243,14 @@
 
 		// Add all items
 		Object.keys( itemsDefinition ).forEach( function ( name ) {
-			var dom = Array.isArray( itemsDefinition[ name ] ) ?
-				itemsDefinition[ name ] :
-				$.parseHTML( itemsDefinition[ name ] )[ 0 ];
+			var dom = getDOMfromItemDefinition( name );
 
 			items.push(
 				new fr.Element( dom, name )
 			);
 		} );
 		manager.addItems( items );
-
+		manager.start();
 		// Connect events
 		manager.on( 'update', function ( name, value ) {
 			events.push( [ 'update', name, value ] );

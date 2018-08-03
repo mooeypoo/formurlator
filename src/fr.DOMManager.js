@@ -7,11 +7,17 @@
 	 * @mixin OO.EmitterList
 	 *
 	 * @constructor
+	 * @param {Object} [config] Configuration options
+	 * @cfg {boolean} [active] Manager is active
 	 */
-	fr.DOMManager = function FrDOMManager() {
+	fr.DOMManager = function FrDOMManager( config ) {
+		config = config || {};
+
 		// Mixin constructor
 		OO.EventEmitter.call( this );
 		OO.EmitterList.call( this );
+
+		this.toggle( !!config.active );
 
 		this.aggregate( {
 			update: 'elementUpdate',
@@ -49,15 +55,30 @@
 
 	/* Methods */
 
+	/**
+	 * Respond to element update event
+	 *
+	 * @param {fr.Element} element Element
+	 * @param {boolean} value Element's current value
+	 * @fires update
+	 */
 	fr.DOMManager.prototype.onElementUpdate = function ( element, value ) {
 		if ( element.isActive() ) {
 			this.emit( 'update', element.getName(), value );
 		}
 	};
 
+	/**
+	 * Respond to element active event
+	 *
+	 * @param {fr.Element} element Element
+	 * @param {boolean} isActive Element is active
+	 * @fires active
+	 */
 	fr.DOMManager.prototype.onElementActive = function ( element, isActive ) {
 		this.emit( 'active', element.getName(), isActive );
 	};
+
 	/**
 	 * Get the current full state of the element values
 	 *
@@ -68,6 +89,21 @@
 
 		this.getActiveItems().forEach( function ( element ) {
 			result[ element.getName() ] = element.getValue();
+		} );
+
+		return result;
+	};
+
+	/**
+	 * Get active element details
+	 *
+	 * @return {Object} Object representing the element details
+	 */
+	fr.DOMManager.prototype.getDetails = function () {
+		var result = {};
+
+		this.getActiveItems().forEach( function ( element ) {
+			result[ element.getName() ] = element.getDetails();
 		} );
 
 		return result;
