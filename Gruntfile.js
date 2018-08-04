@@ -27,7 +27,13 @@ module.exports = function Gruntfile( grunt ) {
 			options: {
 				// banner: grunt.file.read( 'build/banner.txt' ),
 				// Remove wrapping IIFE ( function () {}() );\n
-				process: function ( src ) {
+				process: function ( src, path ) {
+					if (
+						path === 'src/intro.js.txt' ||
+						path === 'src/outro.js.txt'
+					) {
+						return src;
+					}
 					// Only remove the end if we're removing the starting (function () { ... wrapper
 					if ( new RegExp( /^\( function \(\) {/ ).test( src ) ) {
 						// eslint-disable-next-line quotes
@@ -53,7 +59,7 @@ module.exports = function Gruntfile( grunt ) {
 			distWithOOJS: {
 				files: {
 					'dist/formurlator.oojs.js': [
-						'node_modules/oojs/dist/oojs.js',
+						'node_modules/oojs/dist/oojs.min.js',
 						'dist/formurlator.js'
 					]
 				}
@@ -62,10 +68,10 @@ module.exports = function Gruntfile( grunt ) {
 		uglify: {
 			dist: {
 				options: {
-					// banner: '/*! <%= pkg.name %> - v<%= pkg.version %> - ' +
-					// 	'<%= grunt.template.today("yyyy-mm-dd") %> */',
+					banner: '/*! <%= pkg.name %> - v<%= pkg.version %> - ' +
+						'<%= grunt.template.today("yyyy-mm-dd") %> */',
 					mangle: {
-						reserved: [ 'OO' ]
+						reserved: [ 'OO', 'fr' ]
 					},
 					sourceMapIncludeSources: true,
 					sourceMap: true
@@ -82,7 +88,6 @@ module.exports = function Gruntfile( grunt ) {
 				files: [
 					'node_modules/jquery/dist/jquery.js',
 					'node_modules/oojs/dist/oojs.js',
-					// 'dist/formurlator.js',
 					'src/fr.js',
 					'src/fr.Element.js',
 					'src/fr.DOMManager.js',
@@ -125,9 +130,6 @@ module.exports = function Gruntfile( grunt ) {
 				}
 			}
 		}
-		// qunit: {
-		// 	all: [ 'test/index.html' ]
-		// }
 	} );
 
 	grunt.registerTask( 'test', [ 'eslint', 'karma:main' ] );
