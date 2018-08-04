@@ -181,6 +181,11 @@
 			!!this.initiallyActive;
 	};
 
+	fr.DOMManager.prototype.getAllNames = function () {
+		return this.getItems().map( function ( element ) {
+			return element.getName();
+		} );
+	};
 	/**
 	 * @inheritdoc
 	 */

@@ -10,8 +10,10 @@
 	 *  of DOM elements that are grouped, like a group of
 	 *  checkboxes or a group of radio inputs.
 	 * @param {string} [name] Element name
+	 * @param {string|number|boolean} [initialValue] Initial value.
+	 *  This overrides any current values that the DOM element has
 	 */
-	fr.Element = function FrElement( DOMElement, name ) {
+	fr.Element = function FrElement( DOMElement, name, initialValue ) {
 		var i, options,
 			that = this;
 
@@ -77,7 +79,7 @@
 		// Initialize values
 		// We do this so that if a DOM element was written
 		// with invalid values, they will be corrected
-		this.setValue( this.getValue() );
+		this.setValue( initialValue !== undefined ? initialValue : this.getValue() );
 	};
 
 	/* Initialization */

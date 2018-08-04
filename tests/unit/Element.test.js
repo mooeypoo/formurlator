@@ -39,51 +39,66 @@
 			{
 				element: $name.clone()[ 0 ],
 				expectedType: 'text',
+				expectedValue: '',
 				msg: 'Regular text input initialized with correct type.'
 			},
 			{
 				element: $age.clone()[ 0 ],
 				expectedType: 'number',
+				expectedValue: 0,
 				msg: 'Number input initialized with correct type.'
 			},
 			{
 				element: $ageWithBothLimits.clone()[ 0 ],
 				expectedType: 'number',
+				expectedValue: 10,
 				msg: 'Number input initialized with correct type.'
 			},
 			{
 				element: $color.clone()[ 0 ],
 				expectedType: 'select-one',
 				expectedOptions: [ 'yellow', 'green', 'blue', 'red' ],
+				expectedValue: 'green',
 				msg: 'Select-one initialized correctly'
 			},
 			{
 				element: $transit.clone()[ 0 ],
 				expectedType: 'select-multiple',
 				expectedOptions: [ 'car', 'bus', 'subway', 'bike' ],
+				expectedValue: [ 'bus' ],
 				msg: 'Select-multiple initialized with correct type.'
 			},
 			{
 				element: $like.clone()[ 0 ],
 				expectedType: 'checkbox',
+				expectedValue: true,
 				msg: 'Checkbox initialized with correct type.'
 			},
 			{
 				element: workprefArray.slice( 0 ),
 				expectedType: 'radio-group',
 				expectedOptions: [ 'day', 'night', 'any' ],
+				expectedValue: 'day',
 				msg: 'Radio group initialized with correct type.'
 			},
 			{
 				element: clothesArray.slice( 0 ),
 				expectedType: 'checkbox-group',
 				expectedOptions: [ 'jeans', 'flanel', 'cotton' ],
+				expectedValue: [],
+				msg: 'Checkbox group initialized with correct type.'
+			},
+			{
+				element: $name.clone()[ 0 ],
+				initialValue: 'foo',
+				expectedType: 'text',
+				expectedValue: 'foo',
 				msg: 'Checkbox group initialized with correct type.'
 			}
 		];
 
 		cases.forEach( function ( testCase ) {
-			var element = new fr.Element( testCase.element );
+			var element = new fr.Element( testCase.element, '', testCase.initialValue );
 
 			assert.equal(
 				element.getType(),
@@ -96,6 +111,13 @@
 					element.getOptionValues(),
 					testCase.expectedOptions,
 					testCase.msg + ' (Options: ' + testCase.expectedOptions.join( ', ' ) + ')'
+				);
+			}
+			if ( testCase.expectedValue ) {
+				assert.deepEqual(
+					element.getValue(),
+					testCase.expectedValue,
+					testCase.msg + ' (Value: ' + testCase.expectedValue + ')'
 				);
 			}
 		} );
