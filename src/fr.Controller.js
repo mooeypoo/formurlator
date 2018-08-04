@@ -1,7 +1,9 @@
 ( function () {
-	fr.Controller = function FrController() {
+	fr.Controller = function FrController( config ) {
+		config = config || {};
+
 		// Initialize the DOMManager
-		this.manager = new fr.DOMManager();
+		this.manager = new fr.DOMManager( { active: config.active } );
 	};
 
 	/* Initialization */
@@ -67,13 +69,26 @@
 	 *  names.
 	 */
 	fr.Controller.prototype.add = function ( objDefinition ) {
-		var controller = this;
+		var currentItems,
+			controller = this;
 
-		objDefinition = objDefinition || {};
+		if ( Array.isArray( objDefinition ) || typeof objDefinition === 'string' ) {
+			throw new Error( 'When adding an element, the definition must be an object. Please see the documentation for help.' );
+		}
+
+		// We want to get all possible parameters in the system
+		// regardless of whether they are active or not
+		currentItems = this.manager.getItems()
+			.map( function ( item ) { return item.getName(); } );
 
 		Object.keys( objDefinition ).forEach( function ( name ) {
 			var definition = objDefinition[ name ],
 				element = definition;
+
+			if ( currentItems.indexOf( name ) > -1 ) {
+				// Skip if item already exists with this name
+				return;
+			}
 
 			if ( Array.isArray( definition ) ) {
 				// Sanity check, filter so there are only actual elements

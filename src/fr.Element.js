@@ -39,11 +39,15 @@
 				return el.type === DOMElement[ 0 ].type;
 			} );
 
-			if ( this.element[ 0 ].type === 'checkbox' ) {
-				this.type = 'checkbox-group';
-			} else if ( this.element[ 0 ].type === 'radio' ) {
-				this.type = 'radio-group';
+			if (
+				this.element[ 0 ].type !== 'checkbox' &&
+				this.element[ 0 ].type !== 'radio'
+			) {
+				throw new Error( 'An array of elements must be of checkbox or radio type.' );
 			}
+
+			// 'checkbox-group' or 'radio-group'
+			this.type = this.element[ 0 ].type + '-group';
 		} else {
 			this.type = this.element.type;
 		}
@@ -134,14 +138,11 @@
 		if ( !this.compareValues( this.cachedValue, newValue ) ) {
 			switch ( this.getType() ) {
 				case 'checkbox-group':
-					newValue = Array.isArray( newValue ) ? newValue : [ newValue ];
-
 					for ( i = 0; i < this.element.length; i++ ) {
 						this.element[ i ].checked = newValue.indexOf( this.element[ i ].value ) > -1;
 					}
 					break;
 				case 'select-multiple':
-					newValue = Array.isArray( newValue ) ? newValue : [ newValue ];
 					options = this.element.options;
 
 					for ( i = 0; i < options.length; i++ ) {
@@ -218,8 +219,6 @@
 		var that = this;
 
 		switch ( this.getType() ) {
-			case 'text':
-				return String( value );
 			case 'number':
 				if ( this.element.min || this.element.max ) {
 					if ( !isNaN( value ) ) {
@@ -261,7 +260,7 @@
 				} );
 				return value;
 			default:
-				return value;
+				return String( value );
 		}
 	};
 
@@ -296,6 +295,12 @@
 		return true;
 	};
 
+	/**
+	 * Toggle the active state of the element.
+	 *
+	 * @param  {boolean} isActive Element is active
+	 * @fires active
+	 */
 	fr.Element.prototype.toggle = function ( isActive ) {
 		isActive = isActive === undefined ? !this.active : !!isActive;
 

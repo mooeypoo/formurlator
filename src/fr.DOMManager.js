@@ -17,6 +17,8 @@
 		OO.EventEmitter.call( this );
 		OO.EmitterList.call( this );
 
+		this.active = false;
+		this.initiallyActive = !!config.active;
 		this.toggle( !!config.active );
 
 		this.aggregate( {
@@ -168,10 +170,40 @@
 				el.toggle( !!isActive );
 			}
 		} else {
-			// Stop all
+			// Toggle all
 			this.getItems().forEach( function ( element ) {
 				element.toggle( !!isActive );
 			} );
+		}
+
+		this.active = this.getItems().length ?
+			!!this.getActiveItems().length :
+			!!this.initiallyActive;
+	};
+
+	/**
+	 * @inheritdoc
+	 */
+	fr.DOMManager.prototype.addItems = function ( items ) {
+		// Parent call
+		OO.EmitterList.prototype.addItems.call( this, items );
+
+		if ( this.isActive() ) {
+			// Activate on add if the manager is active
+			items.forEach( function ( item ) {
+				item.toggle( true );
+			} );
+		}
+	};
+
+	fr.DOMManager.prototype.isActive = function ( name ) {
+		var el;
+
+		if ( name ) {
+			el = this.getElementByName( name );
+			return el && el.isActive();
+		} else {
+			return this.active;
 		}
 	};
 

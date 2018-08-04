@@ -114,14 +114,14 @@ module.exports = function Gruntfile( grunt ) {
 						{ type: 'html', subdir: 'report-html' },
 						{ type: 'lcov', subdir: 'report-lcov' },
 						{ type: 'lcovonly', subdir: '.', file: 'report-lcovonly.txt' }
-					]
+					],
 					// https://github.com/karma-runner/karma-coverage/blob/v1.1.1/docs/configuration.md#check
-					// check: { global: {
-					// 	functions: 100,
-					// 	statements: 99,
-					// 	branches: 99,
-					// 	lines: 99
-					// } }
+					check: { global: {
+						functions: 100,
+						statements: 99,
+						branches: 99,
+						lines: 99
+					} }
 				}
 			}
 		}

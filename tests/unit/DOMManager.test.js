@@ -58,12 +58,24 @@
 
 	QUnit.module( 'fr.DOMManager' );
 
-	QUnit.test( 'getState', function ( assert ) {
+	QUnit.test( 'setValues & getState', function ( assert ) {
 		var cases = [
 			{
 				values: {},
 				expectedState: $.extend( true, {}, {}, initialState ),
 				msg: 'Initial state'
+			},
+			{
+				values: { invalid: 'blah' },
+				expectedState: $.extend( true, {}, {}, initialState ),
+				msg: 'Invalid value is ignored'
+			},
+			{
+				values: { invalid: 'blah', name: 'bar' },
+				expectedState: $.extend( true, {}, {}, initialState, {
+					name: 'bar'
+				} ),
+				msg: 'Invalid value is ignored, valid values in the same operation are counted'
 			},
 			{
 				values: { age: '20', name: 'foo' },
@@ -109,7 +121,72 @@
 		} );
 	} );
 
-	QUnit.test( 'start / stop', function ( assert ) {
+	QUnit.test( 'setValues & getValue', function ( assert ) {
+		var cases = [
+			{
+				values: {},
+				expectedValue: {
+					age: 0,
+					name: ''
+				},
+				msg: 'Initial state, values are initial values'
+			},
+			{
+				values: { invalid: 'blah', name: 'bar' },
+				expectedValue: {
+					invalid: null,
+					name: 'bar'
+				},
+				msg: 'Invalid value is returns null, valid values in the same operation are counted'
+			},
+			{
+				values: { age: '20', name: 'foo' },
+				expectedValue: {
+					name: 'foo',
+					age: 20
+				},
+				msg: 'Changing valid values for numbers and strings'
+			},
+			{
+				values: { like: 1, age: '25' },
+				expectedValue: {
+					like: true,
+					age: 25
+				},
+				msg: 'Changing valid values and casting them to the correct type'
+			}
+		];
+		cases.forEach( function ( testCase ) {
+			var manager = new fr.DOMManager(),
+				items = [];
+
+			// Add items
+			Object.keys( itemsDefinition ).forEach( function ( name ) {
+				var dom = getDOMfromItemDefinition( name );
+
+				items.push(
+					new fr.Element( dom, name )
+				);
+			} );
+			manager.addItems( items );
+			manager.start(); // Start all; we're testing the state response
+
+			// Change values
+			manager.setValues( testCase.values );
+
+			Object.keys( testCase.expectedValue ).forEach( function ( name ) {
+				assert.deepEqual(
+					manager.getValue( name ),
+					testCase.expectedValue[ name ],
+					testCase.msg + ' -> ' + name
+				);
+
+			} );
+
+		} );
+	} );
+
+	QUnit.test( 'start / stop / isActive', function ( assert ) {
 		var newState,
 			manager = new fr.DOMManager(),
 			items = [];
@@ -138,6 +215,11 @@
 
 		// Stop one item
 		manager.stop( 'name' );
+		assert.equal(
+			manager.isActive( 'name' ),
+			false,
+			'A specific item that stopped is no longer active'
+		);
 		newState = $.extend( true, {}, initialState );
 		delete newState.name;
 		assert.deepEqual(
@@ -158,6 +240,13 @@
 			manager.getState(),
 			$.extend( true, {}, initialState, { name: 'foo', age: 15 } ),
 			'When item is restarted, its true value is represented in the state'
+		);
+
+		manager.stop( 'nonexistent' );
+		assert.deepEqual(
+			manager.getState(),
+			$.extend( true, {}, initialState, { name: 'foo', age: 15 } ),
+			'Ivalid name is ignored for stopping'
 		);
 	} );
 

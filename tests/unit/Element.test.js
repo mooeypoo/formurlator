@@ -101,6 +101,21 @@
 		} );
 	} );
 
+	QUnit.test( 'Initialization with error', function ( assert ) {
+		assert.throws(
+			function () {
+				// eslint-disable-next-line no-unused-vars
+				var el = new fr.Element( [
+					$.parseHTML( '<input type="text">' )[ 0 ],
+					$.parseHTML( '<input type="text">' )[ 0 ],
+					$.parseHTML( '<input type="text">' )[ 0 ]
+				] );
+			},
+			Error,
+			'Invalid element array group throws an error'
+		);
+	} );
+
 	QUnit.test( 'normalizeValue', function ( assert ) {
 		var cases = [
 			{
@@ -126,6 +141,7 @@
 				tests: [
 					// in, out, msg
 					[ 42, 42, '(with limits) Preserve valid number' ],
+					[ 'foo', 10, 'Invalid (string) returns minimum value' ],
 					[ 0, 10, '(with limits) Under the limit - return minimum' ],
 					[ 10, 10, '(with limits) Exactly the minimum, return same' ],
 					[ 120, 120, '(with limits) Exactly the maximum, return same' ],
@@ -137,6 +153,7 @@
 				tests: [
 					// in, out, msg
 					[ 42, 42, '(with min) Preserve valid number' ],
+					[ 'foo', 10, 'Invalid (string) returns minimum value' ],
 					[ 0, 10, '(with min) Under the limit - return minimum' ],
 					[ 10, 10, '(with min) Exactly the minimum, return same' ],
 					[ 999, 999, '(with min) There is no max; use same number' ]
@@ -147,6 +164,7 @@
 				tests: [
 					// in, out, msg
 					[ 42, 42, '(with max) Preserve valid number' ],
+					[ 'foo', 0, 'Invalid (string) returns 0' ],
 					[ -999, -999, '(with max) No minimum, return same number' ],
 					[ '120', 120, '(with max) Exactly the maximum, return same' ],
 					[ 999, 120, '(with max) Above max, return maximum value' ]
@@ -592,11 +610,40 @@
 			assert.deepEqual(
 				events,
 				testCase.expected,
-				'Events registered for type "' + element.getType() + '"'
+				'Event "update" registered for type "' + element.getType() + '"'
 			);
 
 			// Disconnect
 			element.off( 'update', updateEvent );
 		} );
+	} );
+
+	QUnit.test( 'Active event', function ( assert ) {
+		var element = new fr.Element( $name.clone()[ 0 ] ),
+			events = [],
+			activeEvent = function ( isActive ) {
+				events.push( isActive );
+			};
+
+		// Connect
+		element.on( 'active', activeEvent );
+
+		// Run operations
+		element.toggle( true ); // true
+		element.toggle( false ); // false
+		element.toggle(); // true
+		element.toggle(); // false
+		element.toggle(); // true
+		element.toggle( true ); // true; no event because it's not different
+
+		// Test
+		assert.deepEqual(
+			events,
+			[ true, false, true, false, true ],
+			'Event "active" registered successfully'
+		);
+
+		// Disconnect
+		element.off( 'active', activeEvent );
 	} );
 }() );

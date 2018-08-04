@@ -58,6 +58,81 @@
 
 	QUnit.module( 'fr.Controller' );
 
+	QUnit.test( 'add', function ( assert ) {
+		var controller = new fr.Controller();
+
+		controller.add( { foo: getDOMElement( '<input type="checkbox" checked>' ) } );
+		controller.add( { foo: getDOMElement( '<input type="text" value="ignored">' ) } );
+		assert.equal(
+			controller.manager.getValue( 'foo' ),
+			true,
+			'Adding a valid input with value'
+		);
+
+		assert.throws(
+			function () {
+				controller.add( [ 'something', 'else' ] );
+			},
+			'Using invalid value (array) for add() throws an exception'
+		);
+		assert.throws(
+			function () {
+				controller.add( 'something else' );
+			},
+			'Using invalid value (string) for add() throws an exception'
+		);
+
+		controller = new fr.Controller();
+		controller.add( { foo: getDOMElement( '<input type="checkbox" checked>' ) } );
+		controller.add( { foo: getDOMElement( '<input type="text" value="ignored">' ) } );
+		assert.equal(
+			controller.manager.getValue( 'foo' ),
+			true, // This is the value of a checkbox, not a text type
+			'Adding an input with an existing name ignores the addition.'
+		);
+	} );
+
+	QUnit.test( 'start / stop', function ( assert ) {
+		var controller;
+
+		controller = new fr.Controller();
+		controller.add( itemsDefinition );
+		assert.deepEqual(
+			controller.getURLQueryFromElements(),
+			{},
+			'Initially, all elements are off'
+		);
+
+		controller = new fr.Controller( { active: true } );
+		controller.add( itemsDefinition );
+		assert.deepEqual(
+			controller.getURLQueryFromElements(),
+			initialQuery,
+			'If controller starts with { active: true }, all elements are initially on when added'
+		);
+
+		controller.stop();
+		assert.deepEqual(
+			controller.getURLQueryFromElements(),
+			{},
+			'.stop() stops all'
+		);
+
+		controller.start( 'name' );
+		assert.deepEqual(
+			controller.getURLQueryFromElements(),
+			{ name: '' },
+			'.start activates the specific element if it has a parameter'
+		);
+
+		controller.start();
+		assert.deepEqual(
+			controller.getURLQueryFromElements(),
+			initialQuery,
+			'.start without a parameter activates all parameters'
+		);
+	} );
+
 	QUnit.test( 'convertElementValueToURLParam', function ( assert ) {
 		var controller = new fr.Controller(),
 			cases = [
