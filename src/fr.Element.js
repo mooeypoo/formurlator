@@ -266,7 +266,7 @@
 	};
 
 	fr.Element.prototype.compareValues = function ( arr1, arr2 ) {
-		var i;
+		var i, arrCheck, index;
 
 		if ( !Array.isArray( arr1 ) || !Array.isArray( arr2 ) ) {
 			// Compare non-arrays
@@ -281,7 +281,7 @@
 		arrCheck = arr2.slice( 0 );
 		while ( arrCheck.length ) {
 			for ( i = 0; i < arr1.length; i++ ) {
-				var index = arrCheck.indexOf( arr1[ i ] );
+				index = arrCheck.indexOf( arr1[ i ] );
 
 				if ( index === -1 ) {
 					// Arrays aren't equal

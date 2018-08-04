@@ -1,10 +1,17 @@
 /* eslint-env node */
 module.exports = function Gruntfile( grunt ) {
-	var pkg = grunt.file.readJSON( 'package.json' );
+	var pkg = grunt.file.readJSON( 'package.json' ),
+		customLaunchers = require( './tests/karma.browsers.js' ),
+		// Set --no-sandbox for Chrome on Travis.
+		// https://docs.travis-ci.com/user/environment-variables/
+		// See karma.browser.js for details.
+		chromeHeadless = process.env.TRAVIS ? 'ChromeHeadlessNoSandbox' : 'ChromeHeadless';
+
 	grunt.loadNpmTasks( 'grunt-eslint' );
 	grunt.loadNpmTasks( 'grunt-contrib-concat' );
 	grunt.loadNpmTasks( 'grunt-contrib-uglify' );
-	grunt.loadNpmTasks( 'grunt-contrib-qunit' );
+	grunt.loadNpmTasks( 'grunt-karma' );
+	// grunt.loadNpmTasks( 'grunt-contrib-qunit' );
 
 	grunt.initConfig( {
 		pkg: pkg,
@@ -20,7 +27,7 @@ module.exports = function Gruntfile( grunt ) {
 			options: {
 				// banner: grunt.file.read( 'build/banner.txt' ),
 				// Remove wrapping IIFE ( function () {}() );\n
-				process: function ( src, filepath ) {
+				process: function ( src ) {
 					// Only remove the end if we're removing the starting (function () { ... wrapper
 					if ( new RegExp( /^\( function \(\) {/ ).test( src ) ) {
 						// eslint-disable-next-line quotes
@@ -34,21 +41,19 @@ module.exports = function Gruntfile( grunt ) {
 			dist: {
 				files: {
 					'dist/formurlator.js': [
-						// 'src/_start.urlp.js',
-						// 'src/urlp.js',
-						// 'src/urlp.Parameter.js',
-						// 'src/urlp.Element.js',
-						// 'src/urlp.Model.js',
-						// 'src/urlp.View.js',
-						// 'src/urlp.Controller.js',
-						// 'src/_end.urlp.js'
+						'src/intro.js.txt',
+						'src/fr.js',
+						'src/fr.Element.js',
+						'src/fr.DOMManager.js',
+						'src/fr.Controller.js',
+						'src/outro.js.txt'
 					]
 				}
 			},
 			distWithOOJS: {
 				files: {
 					'dist/formurlator.oojs.js': [
-						'node_modules/oojs/dist/oojs.min.js',
+						'node_modules/oojs/dist/oojs.js',
 						'dist/formurlator.js'
 					]
 				}
@@ -71,12 +76,61 @@ module.exports = function Gruntfile( grunt ) {
 				}
 			}
 		},
-		qunit: {
-			all: [ 'test/index.html' ]
+		karma: {
+			options: {
+				frameworks: [ 'qunit' ],
+				files: [
+					'node_modules/jquery/dist/jquery.js',
+					'node_modules/oojs/dist/oojs.js',
+					// 'dist/formurlator.js',
+					'src/fr.js',
+					'src/fr.Element.js',
+					'src/fr.DOMManager.js',
+					'src/fr.Controller.js',
+					'tests/testrunner.js',
+					'tests/unit/*.js'
+				],
+				reporters: [ 'dots' ],
+				customLaunchers: customLaunchers,
+				singleRun: true,
+				autoWatch: false,
+				concurrency: 3,
+				captureTimeout: 90000
+			},
+			// Primary unit test run (includes code coverage)
+			main: {
+				browsers: [ chromeHeadless ],
+				preprocessors: {
+					'src/*.js': [ 'coverage' ]
+				},
+				reporters: [ 'dots', 'coverage' ],
+				coverageReporter: {
+					instrumenterOptions: {
+						istanbul: { noCompact: true }
+					},
+					// specify a common output directory
+					dir: './coverage',
+					reporters: [
+						{ type: 'html', subdir: 'report-html' },
+						{ type: 'lcov', subdir: 'report-lcov' },
+						{ type: 'lcovonly', subdir: '.', file: 'report-lcovonly.txt' }
+					]
+					// https://github.com/karma-runner/karma-coverage/blob/v1.1.1/docs/configuration.md#check
+					// check: { global: {
+					// 	functions: 100,
+					// 	statements: 99,
+					// 	branches: 99,
+					// 	lines: 99
+					// } }
+				}
+			}
 		}
+		// qunit: {
+		// 	all: [ 'test/index.html' ]
+		// }
 	} );
 
-	grunt.registerTask( 'test', [ 'eslint', 'qunit' ] );
+	grunt.registerTask( 'test', [ 'eslint', 'karma:main' ] );
 	grunt.registerTask( 'build', [ 'test', 'concat:dist', 'concat:distWithOOJS', 'uglify' ] );
 	grunt.registerTask( 'default', 'test' );
 };
