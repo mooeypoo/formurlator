@@ -38,6 +38,7 @@
 		this.cachedValue = null;
 		this.options = [];
 		this.optionValues = [];
+		this.onDomChangeFunction = this.onDOMChange.bind( that );
 
 		// Initialize type
 		if (
@@ -103,10 +104,10 @@
 			this.getType() === 'checkbox-group'
 		) {
 			this.element.forEach( function ( opt ) {
-				opt.onchange = that.onDOMChange.bind( that );
+				opt.addEventListener( 'change', that.onDomChangeFunction );
 			} );
 		} else {
-			this.element.onchange = this.onDOMChange.bind( this );
+			this.element.addEventListener( 'change', this.onDomChangeFunction );
 		}
 
 		// Initialize values
@@ -375,15 +376,17 @@
 	 * Destroy the instance, disconnect from events
 	 */
 	fr.Element.prototype.destroy = function () {
+		var that = this;
+
 		if (
 			this.getType() === 'radio-group' ||
 			this.getType() === 'checkbox-group'
 		) {
 			this.element.forEach( function ( opt ) {
-				opt.onchange = function () {};
+				opt.removeEventListener( 'change', that.onDomChangeFunction );
 			} );
 		} else {
-			this.element.onchange = function () {};
+			this.element.removeEventListener( 'change', this.onDomChangeFunction );
 		}
 	};
 }() );

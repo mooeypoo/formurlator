@@ -739,28 +739,29 @@
 				}
 			},
 			changeValue = function ( element, newValue ) {
+				var changeEvent = new Event( 'change', { bubbles: true } );
 				// Change DOM element directly
 				if ( element.getType() === 'select-multiple' ) {
 					element.options.forEach( function ( opt ) {
 						opt.selected = newValue.indexOf( opt.value ) > -1;
 					} );
-					element.element.onchange();
+					element.element.dispatchEvent( changeEvent );
 				} else if ( element.getType() === 'checkbox' ) {
 					element.element.checked = newValue;
-					element.element.onchange(); // We need to trigger this, since we're doing it outside the actual DOM
+					element.element.dispatchEvent( changeEvent ); // We need to trigger this, since we're doing it outside the actual DOM
 				} else if ( element.getType() === 'radio-group' ) {
 					element.element.forEach( function ( opt ) {
 						opt.selected = opt.value === newValue;
-						opt.onchange(); // We need to trigger this, since we're doing it outside the actual DOM
+						opt.dispatchEvent( changeEvent ); // We need to trigger this, since we're doing it outside the actual DOM
 					} );
 				} else if ( element.getType() === 'checkbox-group' ) {
 					element.element.forEach( function ( opt ) {
 						opt.checked = newValue.indexOf( opt.value ) > -1;
-						opt.onchange(); // We need to trigger this, since we're doing it outside the actual DOM
+						opt.dispatchEvent( changeEvent ); // We need to trigger this, since we're doing it outside the actual DOM
 					} );
 				} else {
 					element.element.value = newValue;
-					element.element.onchange(); // We need to trigger this, since we're doing it outside the actual DOM
+					element.element.dispatchEvent( changeEvent ); // We need to trigger this, since we're doing it outside the actual DOM
 				}
 			},
 			cases = [
