@@ -127,6 +127,33 @@
 		assert.throws(
 			function () {
 				// eslint-disable-next-line no-unused-vars
+				var el = new fr.Element();
+			},
+			Error,
+			'Invalid element throws an error (empty element)'
+		);
+
+		assert.throws(
+			function () {
+				// eslint-disable-next-line no-unused-vars
+				var el = new fr.Element( 'name in wrong place' );
+			},
+			Error,
+			'Invalid element throws an error (string for element)'
+		);
+
+		assert.throws(
+			function () {
+				// eslint-disable-next-line no-unused-vars
+				var el = new fr.Element( [ 'foo', 'bar', 'baz' ] );
+			},
+			Error,
+			'Invalid element throws an error (array of strings for element)'
+		);
+
+		assert.throws(
+			function () {
+				// eslint-disable-next-line no-unused-vars
 				var el = new fr.Element( [
 					$.parseHTML( '<input type="text">' )[ 0 ],
 					$.parseHTML( '<input type="text">' )[ 0 ],

@@ -52,6 +52,7 @@ module.exports = function Gruntfile( grunt ) {
 						'src/fr.Element.js',
 						'src/fr.DOMManager.js',
 						'src/fr.Controller.js',
+						'src/singleton.js',
 						'src/outro.js.txt'
 					]
 				}

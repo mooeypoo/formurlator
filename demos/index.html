@@ -8,87 +8,122 @@
   <meta name="description" content="formURLator demo">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-  <link rel="stylesheet" href="demo.css">
-  <!-- Dependencies -->
-  <!-- <script src="../dist/urlProcessor.oojs.min.js"></script> -->
-  <script src="../node_modules/oojs/dist/oojs.js"></script>
-  <script src="../src/urlp.js"></script>
-  <script src="../src/urlp.Parameter.js"></script>
-  <script src="../src/urlp.Element.js"></script>
-  <script src="../src/urlp.Model.js"></script>
-  <script src="../src/urlp.View.js"></script>
-  <script src="../src/urlp.Controller.js"></script>
+  <link rel="stylesheet" href="demos.css">
+  <script src="../dist/formurlator.oojs.min.js"></script>
 
   <script>
-	// document.addEventListener( 'DOMContentLoaded', function( event ) {
-	// 	var stopAllButton = document.getElementById( 'demo-action-stop-all' ),
-	// 		isStopped = false,
-	//
-	// 	formurlator.add( {
-	// 		firstName: document.getElementById( 'demo-firstName' ),
-	// 		lastName: document.getElementById( 'demo-lastName' ),
-	// 		age: {
-	// 			element: document.getElementById( 'demo-age' ),
-	// 			range: {
-	// 				min: 5,
-	// 				max: 120
-	// 			}
-	// 		},
-	// 		color: document.getElementById( 'demo-color' )
-	// 	} );
-	//
-	// 	// Add later
-	// 	formurlator.add( {
-	// 		drive: document.getElementById( 'demo-drive' ),
-	// 		like: document.getElementById( 'demo-like' )
-	// 	} );
-	// 	formurlator.start();
-	//
-	// 	stopAllButton.onclick = function () {
-	// 		isStopped = !isStopped;
-	//
-	// 		stopAllButton.textContent = isStopped ?
-	// 			'Start synchronizing URL' :
-	// 			'Stop syncrhonizing URL';
-	//
-	// 		if ( isStopped ) {
-	// 			formurlator.stop();
-	// 		} else {
-	// 			formurlator.start();
-	// 		}
-	// 	};
-	// } );
+	document.addEventListener( 'DOMContentLoaded', function( event ) {
+		var i,
+			stopAllToggleButton = document.getElementById( 'demo-action-stop-all' ),
+			checkboxesToggle = document.querySelectorAll( '#demo-activate' ),
+			isStopped = false,
+			toggleActive = function ( event ) {
+				var checkbox = event.target,
+					param = checkbox.dataset.param;
+
+				if ( checkbox.checked ) {
+					formurlator.start( param );
+				} else {
+					formurlator.stop( param );
+				}
+			},
+			updateStopAllToggleLabel = function ( isStopped ) {
+				stopAllToggleButton.textContent = isStopped ?
+					'Start synchronizing URL' :
+					'Stop syncrhonizing URL';
+			};
+
+		formurlator.add( {
+			name: document.getElementById( 'demo-name' ),
+			age: document.getElementById( 'demo-age' ),
+			color: document.getElementById( 'demo-color' ),
+			commute: document.getElementById( 'demo-commute' ),
+			like: document.getElementById( 'demo-like' ),
+			workpref: document.getElementsByName( 'workpref' )
+		} );
+
+		updateStopAllToggleLabel( false );
+
+		stopAllToggleButton.onclick = function () {
+			isStopped = !isStopped;
+			updateStopAllToggleLabel( isStopped );
+
+			if ( isStopped ) {
+				formurlator.stop();
+			} else {
+				formurlator.start();
+			}
+
+			for ( i = 0; i < checkboxesToggle.length; i++ ) {
+				checkboxesToggle[ i ].checked = !isStopped;
+			}
+		};
+
+		for ( i = 0; i < checkboxesToggle.length; i++ ) {
+			checkboxesToggle[ i ].addEventListener( 'change', toggleActive );
+		}
+
+	} );
   </script>
 </head>
 <body>
 	<h1>formurlator demo</h1>
 
-	<div class="urlp-demo">
-		<p>Your name: <input id="demo-firstName" type="text" placeholder="First name"> <input id="demo-lastName" type="text" placeholder="Last name"></p>
-		<p>Your age: <input id="demo-age" type="number"><small>(Number between 5 and 120)</smal></p>
-		<p>Favorite color:
-			<select id="demo-color">
-				<option value="yellow">Yellow</option>
-				<option value="green" selected>Green</option>
-				<option value="blue">Blue</option>
-				<option value="red">Red</option>
-			</select>
-		</p>
-		<p>Commute:
-			<select id="demo-commute" multiple>
-				<option value="car">Car</option>
-				<option value="bus" selected>Bus</option>
-				<option value="subway">Subway</option>
-				<option value="bike">Bike</option>
-			</select>
-		</p>
-		<p><input id="demo-like" type="checkbox" checked><label for="demo-like">I like this</label></p>
-		<p>I work best
-			<input id="demo-workpref-day" name="workpref" value="day" type="radio"><label for="demo-workpref-day">During the day</label>
-			<input id="demo-workpref-night" name="workpref" value="night" type="radio"><label for="demo-workpref-night">During the night</label>
-			<input id="demo-workpref-dontcare" name="workpref" value="any" type="radio"><label for="demo-workpref-dontcare">Anytime</label>
-		</p>
-		<p><button id="demo-action-stop-all">Stop syncrhonizing URL</button></p>
+	<div class="fr-demo">
+		<table>
+			<tr>
+				<td class="table-label">Your name:</td>
+				<td class="table-input"><input id="demo-name" type="text" placeholder="Your name"></td>
+				<td class="table-toggle"><input type="checkbox" id="demo-activate" data-param="name" checked><label for="demo-activate-name">Active</label></td>
+			</tr>
+			<tr>
+				<td class="table-label">Your age:</td>
+				<td class="table-input"><input id="demo-age" type="number" min="5" max="120"><br /><small>(Number between 5 and 120)</smal></td>
+				<td class="table-toggle"><input type="checkbox" id="demo-activate" data-param="age" checked><label for="demo-activate-name">Active</label></td>
+			</tr>
+			<tr>
+				<td class="table-label">Favorite color:</td>
+				<td class="table-input">
+					<select id="demo-color">
+						<option value="yellow">Yellow</option>
+						<option value="green" selected>Green</option>
+						<option value="blue">Blue</option>
+						<option value="red">Red</option>
+					</select>
+				</td>
+				<td class="table-toggle"><input type="checkbox"  id="demo-activate" data-param="color" checked><label for="demo-activate-name">Active</label></td>
+			</tr>
+			<tr>
+				<td class="table-label">Favorite commute:</td>
+				<td class="table-input">
+					<select id="demo-commute" multiple>
+						<option value="car">Car</option>
+						<option value="bus" selected>Bus</option>
+						<option value="subway">Subway</option>
+						<option value="bike">Bike</option>
+					</select>
+				</td>
+				<td class="table-toggle"><input type="checkbox"  id="demo-activate" data-param="commute" checked><label for="demo-activate-name">Active</label></td>
+			</tr>
+			<tr>
+				<td class="table-label">Favorite commute:</td>
+				<td class="table-input"><input id="demo-like" type="checkbox" checked><label for="demo-like">I like this</label></td>
+				<td class="table-toggle"><input type="checkbox"  id="demo-activate" data-param="like" checked><label for="demo-activate-name">Active</label></td>
+			</tr>
+			<tr>
+				<td class="table-label">I work best at</td>
+				<td class="table-input">
+					<input id="demo-workpref-day" name="workpref" value="day" type="radio"><label for="demo-workpref-day">During the day</label>
+					<input id="demo-workpref-night" name="workpref" value="night" type="radio"><label for="demo-workpref-night">During the night</label>
+					<input id="demo-workpref-dontcare" name="workpref" value="any" type="radio"><label for="demo-workpref-dontcare">Anytime</label>
+				</td>
+				<td class="table-toggle"><input type="checkbox"  id="demo-activate" data-param="workpref" checked><label for="demo-activate-name">Active</label></td>
+			</tr>
+			<tr>
+				<td colspan="3"><button id="demo-action-stop-all">Stop syncrhonizing URL</button></td>
+			</tr>
+		</table>
+
 	</div>
 </body>
 </html>

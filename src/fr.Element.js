@@ -17,6 +17,16 @@
 		var i, options,
 			that = this;
 
+		if (
+			!DOMElement ||
+			(
+				!( DOMElement instanceof Element ) &&
+				!Array.isArray( DOMElement ) &&
+				!( DOMElement instanceof NodeList )
+			)
+		) {
+			throw new Error( 'Element provided for "' + name + '" is not a valid DOM element or array of DOM elements.' );
+		}
 		// Mixin constructor
 		OO.EventEmitter.call( this );
 		OO.EmitterList.call( this );
@@ -34,10 +44,21 @@
 			Array.isArray( DOMElement ) ||
 			DOMElement instanceof NodeList
 		) {
+			this.element = DOMElement;
+			// TODO: Figure out how to create a NodeList
+			// in memory, so we can test below
+			/* istanbul ignore if  */
+			if ( DOMElement instanceof NodeList ) {
+				// Transform into an array
+				this.element = [];
+				for ( i = 0; i < DOMElement.length; i++ ) {
+					this.element.push( DOMElement[ i ] );
+				}
+			}
 			// Array of radio buttons or checkboxes
 
 			// Sanity check: Filter only to the same type
-			this.element = DOMElement.filter( function ( el ) {
+			this.element = this.element.filter( function ( el ) {
 				return el.type === DOMElement[ 0 ].type;
 			} );
 
