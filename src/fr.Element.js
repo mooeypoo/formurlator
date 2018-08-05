@@ -76,6 +76,18 @@
 			} );
 		}
 
+		// Events
+		if (
+			this.getType() === 'radio-group' ||
+			this.getType() === 'checkbox-group'
+		) {
+			this.element.forEach( function ( opt ) {
+				opt.onchange = that.onDOMChange.bind( that );
+			} );
+		} else {
+			this.element.onchange = this.onDOMChange.bind( this );
+		}
+
 		// Initialize values
 		// We do this so that if a DOM element was written
 		// with invalid values, they will be corrected
@@ -97,6 +109,16 @@
 	 */
 
 	/* Methods */
+
+	/**
+	 * Respond to DOM change event
+	 *
+	 * @fire
+	 */
+	fr.Element.prototype.onDOMChange = function () {
+		// Update value
+		this.setValue( this.getValue() );
+	};
 
 	/**
 	 * Get the element details
@@ -326,5 +348,21 @@
 
 	fr.Element.prototype.getOptionValues = function () {
 		return this.optionValues;
+	};
+
+	/**
+	 * Destroy the instance, disconnect from events
+	 */
+	fr.Element.prototype.destroy = function () {
+		if (
+			this.getType() === 'radio-group' ||
+			this.getType() === 'checkbox-group'
+		) {
+			this.element.forEach( function ( opt ) {
+				opt.onchange = function () {};
+			} );
+		} else {
+			this.element.onchange = function () {};
+		}
 	};
 }() );

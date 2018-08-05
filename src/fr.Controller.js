@@ -242,4 +242,13 @@
 	fr.Controller.prototype.stop = function ( name ) {
 		this.manager.stop( name );
 	};
+
+	/* istanbul ignore next */
+	/**
+	 * Destroy the instance, disconnect from events
+	 */
+	fr.Controller.prototype.destroy = function () {
+		this.manager.destroy();
+		this.manager.disconnect( this );
+	};
 }() );

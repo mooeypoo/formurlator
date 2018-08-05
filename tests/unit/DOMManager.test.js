@@ -377,4 +377,49 @@
 		);
 	} );
 
+	QUnit.test( 'Destroy', function ( assert ) {
+		var events = [],
+			manager = new fr.DOMManager(),
+			items = [];
+
+		// Add all items
+		Object.keys( itemsDefinition ).forEach( function ( name ) {
+			var dom = getDOMfromItemDefinition( name );
+
+			items.push(
+				new fr.Element( dom, name )
+			);
+		} );
+		manager.addItems( items );
+		manager.start();
+		// Connect events
+		manager.on( 'update', function ( name, value ) {
+			events.push( [ 'update', name, value ] );
+		} );
+		manager.on( 'active', function ( name, value ) {
+			events.push( [ 'active', name, value ] );
+		} );
+
+		// Run actions (same as events test)
+		manager.setValues( { age: 15, transit: [ 'bus', 'subway' ] } );
+		manager.setValues( { age: 15, transit: [ 'car' ] } );
+		manager.setValues( { age: 42, color: 'red' } );
+		manager.destroy();
+		manager.setValues( { like: false, color: 'blue' } );
+		manager.setValues( { workpref: 'any', color: 'yellow' } );
+		manager.setValues( { like: true, color: 'blue' } );
+
+		assert.deepEqual(
+			events,
+			[
+				[ 'update', 'age', 15 ],
+				[ 'update', 'transit', [ 'bus', 'subway' ] ],
+				[ 'update', 'transit', [ 'car' ] ], // Only transit was updated; age was same value
+				[ 'update', 'age', 42 ],
+				[ 'update', 'color', 'red' ]
+			],
+			'Events were only emitted before the manager was destroyed'
+		);
+	} );
+
 }() );

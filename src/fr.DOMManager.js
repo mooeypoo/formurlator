@@ -234,4 +234,15 @@
 			return element.isActive();
 		} );
 	};
+
+	/**
+	 * Destroy the instance, disconnect from events
+	 */
+	fr.DOMManager.prototype.destroy = function () {
+		this.disconnect( this );
+
+		this.getItems().forEach( function ( element ) {
+			element.destroy();
+		} );
+	};
 }() );

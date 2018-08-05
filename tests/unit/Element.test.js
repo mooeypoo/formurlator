@@ -668,4 +668,154 @@
 		// Disconnect
 		element.off( 'active', activeEvent );
 	} );
+
+	QUnit.test( 'Synchronize to DOM changes', function ( assert ) {
+		var definitions = {
+				name: '<input id="firstName" type="text" placeholder="First name">',
+				age: '<input id="age" type="number">',
+				color: '<select id="color">' +
+						'<option value="yellow">Yellow</option>' +
+						'<option value="green" selected>Green</option>' +
+						'<option value="blue">Blue</option>' +
+						'<option value="red">Red</option>' +
+					'</select>',
+				transit: '<select id="transit" multiple>' +
+						'<option value="car">Car</option>' +
+						'<option value="bus" selected>Bus</option>' +
+						'<option value="subway">Subway</option>' +
+						'<option value="bike">Bike</option>' +
+					'</select>',
+				like: '<input id="like" type="checkbox" checked>',
+				workpref: [
+					'<input id="workpref-day" name="workpref" value="day" type="radio">',
+					'<input id="workpref-night" name="workpref" value="night" type="radio">',
+					'<input id="workpref-any" name="workpref" value="any" type="radio">'
+				],
+				clothes: [
+					'<input id="clothes-jeans" name="clothes" value="jeans" type="checkbox">',
+					'<input id="clothes-flanel" name="clothes" value="flanel" type="checkbox">',
+					'<input id="clothes-cotton" name="clothes" value="cotton" type="checkbox">'
+				]
+			},
+			getDOMElement = function ( str ) {
+				var result;
+				if ( Array.isArray( str ) ) {
+					result = [];
+					str.forEach( function ( el ) {
+						var element = $.parseHTML( el )[ 0 ];
+						result.push( element.cloneNode( true ) );
+					} );
+					return result;
+				} else {
+					result = $.parseHTML( str )[ 0 ];
+					return result.cloneNode( true );
+				}
+			},
+			changeValue = function ( element, newValue ) {
+				// Change DOM element directly
+				if ( element.getType() === 'select-multiple' ) {
+					element.options.forEach( function ( opt ) {
+						opt.selected = newValue.indexOf( opt.value ) > -1;
+					} );
+					element.element.onchange();
+				} else if ( element.getType() === 'checkbox' ) {
+					element.element.checked = newValue;
+					element.element.onchange(); // We need to trigger this, since we're doing it outside the actual DOM
+				} else if ( element.getType() === 'radio-group' ) {
+					element.element.forEach( function ( opt ) {
+						opt.selected = opt.value === newValue;
+						opt.onchange(); // We need to trigger this, since we're doing it outside the actual DOM
+					} );
+				} else if ( element.getType() === 'checkbox-group' ) {
+					element.element.forEach( function ( opt ) {
+						opt.checked = newValue.indexOf( opt.value ) > -1;
+						opt.onchange(); // We need to trigger this, since we're doing it outside the actual DOM
+					} );
+				} else {
+					element.element.value = newValue;
+					element.element.onchange(); // We need to trigger this, since we're doing it outside the actual DOM
+				}
+			},
+			cases = [
+				{
+					element: getDOMElement( definitions.name ),
+					initialValue: '',
+					value: 'foo',
+					valueAfterDestroy: 'bar'
+				},
+				{
+					element: getDOMElement( definitions.age ),
+					initialValue: 0,
+					value: 10,
+					valueAfterDestroy: 42
+				},
+				{
+					element: getDOMElement( definitions.color ),
+					initialValue: 'green',
+					value: 'red',
+					valueAfterDestroy: 'yellow'
+				},
+				{
+					element: getDOMElement( definitions.transit ),
+					initialValue: [ 'bus' ],
+					value: [ 'bike', 'subway' ],
+					valueAfterDestroy: [ 'car' ]
+				},
+				{
+					element: getDOMElement( definitions.like ),
+					initialValue: true,
+					value: false,
+					valueAfterDestroy: true
+				},
+				{
+					element: getDOMElement( definitions.workpref ),
+					initialValue: 'day',
+					value: 'night',
+					valueAfterDestroy: 'any'
+				},
+				{
+					element: getDOMElement( definitions.clothes ),
+					initialValue: [],
+					value: [ 'flanel', 'cotton' ],
+					valueAfterDestroy: [ 'jeans' ]
+				}
+			],
+			events = [];
+		cases.forEach( function ( testCase ) {
+			var element = new fr.Element( testCase.element, null ),
+				update = function ( val ) {
+					events.push( [ element.getType(), val ] );
+				};
+			element.on( 'update', update );
+			assert.deepEqual(
+				element.getValue(),
+				testCase.initialValue,
+				'Initial value: ' + element.getType()
+			);
+
+			changeValue( element, testCase.value );
+
+			element.destroy();
+
+			// This should not produce event
+			changeValue( element, testCase.valueAfterDestroy );
+		} );
+
+		assert.deepEqual(
+			events,
+			[
+				[ 'text', 'foo' ],
+				[ 'number', 10 ],
+				[ 'select-one', 'red' ],
+				[ 'select-multiple', [ 'subway', 'bike' ] ],
+				[ 'checkbox', false ],
+				// Checkbox group will emit 2 events, as each
+				// of the checkboxes gets updated
+				[ 'checkbox-group', [ 'flanel' ] ],
+				[ 'checkbox-group', [ 'flanel', 'cotton' ] ]
+			],
+			'Update events emitted when DOM is changed directly'
+		);
+	} );
+
 }() );
