@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- <link rel="icon" href="../../../../favicon.ico"> -->
+
+    <title>formurlator demos and documentation</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="assets/bootstrap.min.css" rel="stylesheet">
+
+
+	<!-- prism syntax highlighting -->
+	<link href="assets/prism.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+	<link href="assets/sticky-footer-navbar.css" rel="stylesheet">
+	<link href="assets/formurlator.css" rel="stylesheet">
+  </head>
+
+  <body class="fr-page-demos">
+
+    <header>
+      <!-- Fixed navbar -->
+      <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+        <a class="navbar-brand fr-brand" href="#">form<strong>url</strong>ator</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="index.html">Introduction <span class="sr-only">(current)</span></a>
+            </li>
+			<li class="nav-item active">
+              <a class="nav-link" href="demos.html">Demo</a>
+            </li>
+			<li class="nav-item">
+              <a class="nav-link" href="documentation.html">Documentation</a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+    </header>
+    <!-- Begin page content -->
+    <main role="main" class="container">
+      <h1 class="mt-5">form<strong>url</strong>ator <small>v0.1.0</small></h1>
+      <p class="lead">formurlator is a JavaScript library meant to synchronize a set of DOM elements with a query string in the URL.</p>
+
+	  <p>The elements below are already initialized.</p>
+	  <p>Any change to the DOM element will be reflected in the URL. If you reload this page with changes in the URL values, they will be reflected in the DOM elements' values. Invalid values will be corrected, according to the definitions in the elements or available options.</p>
+	  <p>To stop listening to changes in any of the elements, toggle the "active" checkbox attached to it. To stop or start listening to the system in general, toggle the "Stop/Start synchronizing URL" button.
+	  <p>Refer to <a href="documentation.html">the documentation</a> for more information.</p>
+
+	  <table>
+		  <tr>
+			  <td class="table-label">Your name:</td>
+			  <td class="table-input"><input id="demo-name" type="text" placeholder="Your name"></td>
+			  <td class="table-toggle"><input type="checkbox" id="demo-activate" data-param="name" checked><label for="demo-activate-name">Active</label></td>
+		  </tr>
+		  <tr>
+			  <td class="table-label">Your age:</td>
+			  <td class="table-input"><input id="demo-age" type="number" min="5" max="120"><br /><small>(Number between 5 and 120)</smal></td>
+			  <td class="table-toggle"><input type="checkbox" id="demo-activate" data-param="age" checked><label for="demo-activate-name">Active</label></td>
+		  </tr>
+		  <tr>
+			  <td class="table-label">Favorite color:</td>
+			  <td class="table-input">
+				  <select id="demo-color">
+					  <option value="yellow">Yellow</option>
+					  <option value="green" selected>Green</option>
+					  <option value="blue">Blue</option>
+					  <option value="red">Red</option>
+				  </select>
+			  </td>
+			  <td class="table-toggle"><input type="checkbox"  id="demo-activate" data-param="color" checked><label for="demo-activate-name">Active</label></td>
+		  </tr>
+		  <tr>
+			  <td class="table-label">Favorite commute:</td>
+			  <td class="table-input">
+				  <select id="demo-commute" multiple>
+					  <option value="car">Car</option>
+					  <option value="bus" selected>Bus</option>
+					  <option value="subway">Subway</option>
+					  <option value="bike">Bike</option>
+				  </select>
+			  </td>
+			  <td class="table-toggle"><input type="checkbox"  id="demo-activate" data-param="commute" checked><label for="demo-activate-name">Active</label></td>
+		  </tr>
+		  <tr>
+			  <td class="table-label">Favorite commute:</td>
+			  <td class="table-input"><input id="demo-like" type="checkbox" checked><label for="demo-like">I like this</label></td>
+			  <td class="table-toggle"><input type="checkbox"  id="demo-activate" data-param="like" checked><label for="demo-activate-name">Active</label></td>
+		  </tr>
+		  <tr>
+			  <td class="table-label">I work best at</td>
+			  <td class="table-input">
+				  <input id="demo-workpref-day" name="workpref" value="day" type="radio"><label for="demo-workpref-day">During the day</label>
+				  <input id="demo-workpref-night" name="workpref" value="night" type="radio"><label for="demo-workpref-night">During the night</label>
+				  <input id="demo-workpref-dontcare" name="workpref" value="any" type="radio"><label for="demo-workpref-dontcare">Anytime</label>
+			  </td>
+			  <td class="table-toggle"><input type="checkbox"  id="demo-activate" data-param="workpref" checked><label for="demo-activate-name">Active</label></td>
+		  </tr>
+		  <tr>
+			  <td colspan="3"><button id="demo-action-stop-all">Stop syncrhonizing URL</button></td>
+		  </tr>
+	  </table>
+
+<h2>Code:</h2>
+	  <pre><code class="javascript language-javascript">formurlator.add( {
+	name: document.getElementById( 'demo-name' ),
+	age: document.getElementById( 'demo-age' ),
+	color: document.getElementById( 'demo-color' ),
+	commute: document.getElementById( 'demo-commute' ),
+	like: document.getElementById( 'demo-like' ),
+	workpref: document.getElementsByName( 'workpref' )
+} );</code></pre>
+
+    </main>
+
+    <footer class="footer fr-footer">
+      <div class="container fr-footer-container">
+		  <div class="text-muted">Copyright (c) 2018 <a href="http://moriel.smarterthanthat.com">Moriel Schottlender</a>, <a href="https://opensource.org/licenses/MIT">MIT License</a></div>
+		  <div class="text-muted">Contribute to formurlator on <a href="https://github.com/mooeypoo/formurlator">GitHub</a>.</div>
+      </div>
+    </footer>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script>window.jQuery || document.write('<script src="assets/jquery-slim.min.js"><\/script>')</script>
+    <script src="assets/popper.min.js"></script>
+    <script src="assets/bootstrap.min.js"></script>
+	<!-- syntax highlighting -->
+	<script src="assets/prism.js"></script>
+	<script src="assets/formurlator.oojs.min.js"></script>
+	<script>
+  	document.addEventListener( 'DOMContentLoaded', function( event ) {
+  		var i,
+  			stopAllToggleButton = document.getElementById( 'demo-action-stop-all' ),
+  			checkboxesToggle = document.querySelectorAll( '#demo-activate' ),
+  			isStopped = false,
+  			toggleActive = function ( event ) {
+  				var checkbox = event.target,
+  					param = checkbox.dataset.param;
+
+  				if ( checkbox.checked ) {
+  					formurlator.start( param );
+  				} else {
+  					formurlator.stop( param );
+  				}
+  			},
+  			updateStopAllToggleLabel = function ( isStopped ) {
+  				stopAllToggleButton.textContent = isStopped ?
+  					'Start synchronizing URL' :
+  					'Stop syncrhonizing URL';
+  			};
+
+  		formurlator.add( {
+  			name: document.getElementById( 'demo-name' ),
+  			age: document.getElementById( 'demo-age' ),
+  			color: document.getElementById( 'demo-color' ),
+  			commute: document.getElementById( 'demo-commute' ),
+  			like: document.getElementById( 'demo-like' ),
+  			workpref: document.getElementsByName( 'workpref' )
+  		} );
+
+  		updateStopAllToggleLabel( false );
+
+  		// Add event listener for the 'stop all' toggle button
+  		stopAllToggleButton.onclick = function () {
+  			isStopped = !isStopped;
+  			updateStopAllToggleLabel( isStopped );
+
+  			if ( isStopped ) {
+  				formurlator.stop();
+  			} else {
+  				formurlator.start();
+  			}
+
+  			for ( i = 0; i < checkboxesToggle.length; i++ ) {
+  				checkboxesToggle[ i ].checked = !isStopped;
+  			}
+  		};
+
+  		// Add event listeners for all the 'active' checkboxes
+  		for ( i = 0; i < checkboxesToggle.length; i++ ) {
+  			checkboxesToggle[ i ].addEventListener( 'change', toggleActive );
+  		}
+
+  	} );
+    </script>
+  </body>
+</html>

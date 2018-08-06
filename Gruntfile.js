@@ -11,7 +11,7 @@ module.exports = function Gruntfile( grunt ) {
 	grunt.loadNpmTasks( 'grunt-contrib-concat' );
 	grunt.loadNpmTasks( 'grunt-contrib-uglify' );
 	grunt.loadNpmTasks( 'grunt-karma' );
-	// grunt.loadNpmTasks( 'grunt-contrib-qunit' );
+	grunt.loadNpmTasks( 'grunt-contrib-copy' );
 
 	grunt.initConfig( {
 		pkg: pkg,
@@ -83,6 +83,12 @@ module.exports = function Gruntfile( grunt ) {
 				}
 			}
 		},
+		copy: {
+			main: {
+				src: 'dist/formurlator.oojs.min.js',
+				dest: 'docs/assets/formurlator.oojs.min.js'
+			}
+		},
 		karma: {
 			options: {
 				frameworks: [ 'qunit' ],
@@ -134,6 +140,6 @@ module.exports = function Gruntfile( grunt ) {
 	} );
 
 	grunt.registerTask( 'test', [ 'eslint', 'karma:main' ] );
-	grunt.registerTask( 'build', [ 'test', 'concat:dist', 'concat:distWithOOJS', 'uglify' ] );
+	grunt.registerTask( 'build', [ 'test', 'concat:dist', 'concat:distWithOOJS', 'uglify', 'copy' ] );
 	grunt.registerTask( 'default', 'test' );
 };
