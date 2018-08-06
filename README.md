@@ -9,9 +9,11 @@ formurlator is a JavaScript library meant to synchronize a set of DOM elements w
 
 ## Usage
 To use this library, attach it:
+
 ```html
 <script src="formurlator.oojs.min.js"></script>
 ```
+
 ** Note: If you are using oojs separately, you can attach `formurlator.min.js` alongside oojs library **
 
 You must define the DOM elements with their query parameters before the system can synchronize the values. To do that, add on initialization:
@@ -28,16 +30,18 @@ formurlator.add( {
 The allowed definition is either a single `Element`, a `NodeList` or an Array of `Element`s.
 
 The above definition will connect to the DOM elements and produce the URL query:
-```?name=xx&age=0&color=xx&commute=xx&like=1&workpref=xx```
+`?name=xx&age=0&color=xx&commute=xx&like=1&workpref=xx`
 
 ### Reading limits and preset options from DOM values
 Some DOM elements have possible extra definitions that the system can read.
 
 #### Limits for type="number"
 To make sure the system follows a limit for an input that handles numbers, you can add the limits in the DOM definition:
-```
+
+```html
 <input type="number" min="10" max="120">
 ```
+
 This will ensure that all values follow the limit. If values in the URL query are outside the limit, they will be corrected to fit inside that limit (if they are above the limit, they will be corrected to be the max, and if they're under the limit they will be corrected to the minimum)
 
 #### Providing preset options
@@ -47,7 +51,8 @@ There are several ways to produce the behavior of preset options, by choosing th
 If a DOM element is provided with a select option, only the values provided are considered valid. If a value is produced that is invalid, it is corrected to the first value in the option set.
 
 For example, to have a preset parameter `colors` that only allows the options "red", "blue", "green" and "yellow", you can produce the following DOM:
-```
+
+```html
 <select id="input-colors">
 	<option value="red">Red</option>
 	<option value="blue">Blue</option>
@@ -75,7 +80,7 @@ formurlator.add( { color: document.getElementsByName( 'color' ) } );
 ```
 
 or as an array of elements
-```
+```javascript
 formurlator.add( { color: [
 	document.getElementById( 'color-red' ),
 	document.getElementById( 'color-blue' ),
@@ -106,7 +111,7 @@ formurlator.add( { color: document.getElementsByName( 'color' ) } );
 ```
 
 or as an array of elements
-```
+```javascript
 formurlator.add( { color: [
 	document.getElementById( 'color-red' ),
 	document.getElementById( 'color-blue' ),
@@ -121,7 +126,7 @@ Another method of creating a parameter that allows multiple values from within a
 **Note: For the moment, all multi-selection values are separated by a comma (,) which means the values themselves cannot include a comma within the value itself.**
 
 For example, to have a preset parameter `colors` that allows for multiple selection between the options "red", "blue", "green" and "yellow", you can produce the following DOM:
-```
+```html
 <select id="input-colors" multiple>
 	<option value="red">Red</option>
 	<option value="blue">Blue</option>
@@ -135,19 +140,20 @@ This DOM element, when given to the system, will produce a url parameter `?color
 
 By default, the system will start synchronizing immediately. You can stop listening for individual elements by calling `formurlator.stop( [param-name] )`:
 
-```
+```javascript
 formurlator.stop( 'name' );
 ```
 This will stop listening to changes (either from the URL or from the DOM) and not synchronize the values to the URL params.
 
 You can start (or start again) listening to an element by calling `formurlator.start( [param-name] );`:
-```
+
+```javascript
 formurlator.start( 'name' );
 ```
 This will resume listening to DOM value changes. It will immediately update the URL with the current DOM value, and continue synchronizing the value to the url query.
 
 You can also stop or start the entire system by calling stop and start without parameters:
-```
+```javascript
 formurlator.stop();
 formurlator.start();
 ```
@@ -155,7 +161,7 @@ formurlator.start();
 ### Loading elements on 'stop' mode initially
 By default, adding elements will immediately synchronize their status with the URL. If you want to change this feature, and have your parameters (or any added ones) first start inert, you can reload the formurlator system with `{ active: false }` configuration:
 
-```
+```javascript
 formurlator.reload( { active: false } );
 ```
 This will reload formurlator in a state where any .add() method will start in inert ('stop') mode, and will require you to specifically state `formurlator.start()` without parameters to start the entire parameter-set or for each individual parameter.
