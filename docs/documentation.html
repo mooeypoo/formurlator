@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
+	<meta name="description" content="formurlator is a JavaScript library meant to synchronize a set of DOM elements with a query string in the URL.">
+    <meta name="author" content="Moriel Schottlender">
     <!-- <link rel="icon" href="../../../../favicon.ico"> -->
 
     <title>formurlator demos and documentation</title>
@@ -61,7 +61,9 @@
 
 	  <pre><code class="html language-html">&lt;script src="formurlator.oojs.min.js"&gt;&lt;/script&gt;</code></pre>
 
-	  <div class="fr-note"><strong>Note:</strong> If you are using oojs separately, you can attach <code>formurlator.min.js</code> alongside oojs library *</div>
+	  <div class="alert alert-secondary" role="alert">
+		<strong>Note:</strong> If you are using oojs separately, you can attach <code>formurlator.min.js</code> alongside oojs library
+	  </div>
 
 	  <h2>Defining parameters for elements</h2>
 	  <p>You must define the DOM elements with their query parameters before the system can synchronize the values. To do that, add on initialization:</p>
@@ -136,7 +138,9 @@
 
 	  <p>A checkbox group can provide the feature of having preset options in a multi-selection of values.</p>
 
-	  <p><strong>Note: For the moment, all multi-selection values are separated by a comma (,) which means the values themselves cannot include a comma within the value itself.</strong></p>
+	  <div class="alert alert-secondary" role="alert">
+		  <strong>Note:</strong> For the moment, all multi-selection values are separated by a comma (,) which means the values themselves cannot include a comma within the value itself.</strong>
+	  </div>
 
 	  <p>The same example from above, with a parameter <code>color</code> and values "red", "blue", "green" and "yellow", use the following DOM element definition:</p>
 
@@ -163,7 +167,9 @@
 
 	  <p>Another method of creating a parameter that allows multiple values from within a preset, you can use the <code>&lt;select multiple&gt;</code> element. It works similarly to the <code>&lt;select&gt;</code> option but allows for multiple values.</p>
 
-	  <div class="fr-note"><strong>Note:</strong> For the moment, all multi-selection values are separated by a comma (,) which means the values themselves cannot include a comma within the value itself.</div>
+	  <div class="alert alert-secondary" role="alert">
+		  <strong>Note:</strong> For the moment, all multi-selection values are separated by a comma (,) which means the values themselves cannot include a comma within the value itself.
+	  </div>
 
 	  <p>For example, to have a preset parameter <code>colors</code> that allows for multiple selection between the options "red", "blue", "green" and "yellow", you can produce the following DOM:</p>
 

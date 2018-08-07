@@ -3,15 +3,14 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
+    <meta name="description" content="formurlator is a JavaScript library meant to synchronize a set of DOM elements with a query string in the URL.">
+    <meta name="author" content="Moriel Schottlender">
     <!-- <link rel="icon" href="../../../../favicon.ico"> -->
 
     <title>formurlator demos and documentation</title>
 
     <!-- Bootstrap core CSS -->
     <link href="assets/bootstrap.min.css" rel="stylesheet">
-
 
 	<!-- prism syntax highlighting -->
 	<link href="assets/prism.css" rel="stylesheet">
@@ -58,45 +57,45 @@
 	  <p>To stop listening to changes in any of the elements, toggle the "active" checkbox attached to it. To stop or start listening to the system in general, toggle the "Stop/Start synchronizing URL" button.
 	  <p>Refer to <a href="documentation.html">the documentation</a> for more information.</p>
 
-	  <table>
+	  <table class="table">
 		  <tr>
 			  <td class="table-label">Your name:</td>
-			  <td class="table-input"><input id="demo-name" type="text" placeholder="Your name"></td>
-			  <td class="table-toggle"><input type="checkbox" id="demo-activate" data-param="name" checked><label for="demo-activate-name">Active</label></td>
+			  <td class="table-input"><input id="demo-name" type="text" class="form-control" placeholder="Your name"></td>
+			  <td class="table-toggle"><input type="checkbox" id="demo-activate-name" data-param="name" checked><label for="demo-activate-name">Active</label></td>
 		  </tr>
 		  <tr>
 			  <td class="table-label">Your age:</td>
-			  <td class="table-input"><input id="demo-age" type="number" min="5" max="120"><br /><small>(Number between 5 and 120)</smal></td>
-			  <td class="table-toggle"><input type="checkbox" id="demo-activate" data-param="age" checked><label for="demo-activate-name">Active</label></td>
+			  <td class="table-input"><input id="demo-age" type="number" class="form-control" min="5" max="120"><br /><small>(Number between 5 and 120)</smal></td>
+			  <td class="table-toggle"><input type="checkbox" id="demo-activate-age" data-param="age" checked><label for="demo-activate-age">Active</label></td>
 		  </tr>
 		  <tr>
 			  <td class="table-label">Favorite color:</td>
 			  <td class="table-input">
-				  <select id="demo-color">
+				  <select id="demo-color" class="form-control">
 					  <option value="yellow">Yellow</option>
 					  <option value="green" selected>Green</option>
 					  <option value="blue">Blue</option>
 					  <option value="red">Red</option>
 				  </select>
 			  </td>
-			  <td class="table-toggle"><input type="checkbox"  id="demo-activate" data-param="color" checked><label for="demo-activate-name">Active</label></td>
+			  <td class="table-toggle"><input type="checkbox" id="demo-activate-color" data-param="color" checked><label for="demo-activate-color">Active</label></td>
 		  </tr>
 		  <tr>
 			  <td class="table-label">Favorite commute:</td>
 			  <td class="table-input">
-				  <select id="demo-commute" multiple>
+				  <select id="demo-commute" class="custom-select" multiple>
 					  <option value="car">Car</option>
 					  <option value="bus" selected>Bus</option>
 					  <option value="subway">Subway</option>
 					  <option value="bike">Bike</option>
 				  </select>
 			  </td>
-			  <td class="table-toggle"><input type="checkbox"  id="demo-activate" data-param="commute" checked><label for="demo-activate-name">Active</label></td>
+			  <td class="table-toggle"><input type="checkbox"  id="demo-activate-commute" data-param="commute" checked><label for="demo-activate-commute">Active</label></td>
 		  </tr>
 		  <tr>
 			  <td class="table-label">Favorite commute:</td>
 			  <td class="table-input"><input id="demo-like" type="checkbox" checked><label for="demo-like">I like this</label></td>
-			  <td class="table-toggle"><input type="checkbox"  id="demo-activate" data-param="like" checked><label for="demo-activate-name">Active</label></td>
+			  <td class="table-toggle"><input type="checkbox"  id="demo-activate-like" data-param="like" checked><label for="demo-activate-like">Active</label></td>
 		  </tr>
 		  <tr>
 			  <td class="table-label">I work best at</td>
@@ -105,7 +104,16 @@
 				  <input id="demo-workpref-night" name="workpref" value="night" type="radio"><label for="demo-workpref-night">During the night</label>
 				  <input id="demo-workpref-dontcare" name="workpref" value="any" type="radio"><label for="demo-workpref-dontcare">Anytime</label>
 			  </td>
-			  <td class="table-toggle"><input type="checkbox"  id="demo-activate" data-param="workpref" checked><label for="demo-activate-name">Active</label></td>
+			  <td class="table-toggle"><input type="checkbox" id="demo-activate-workpref" data-param="workpref" checked><label for="demo-activate-workpref">Active</label></td>
+		  </tr>
+		  <tr>
+			  <td class="table-label">I love wearing the following combinations</td>
+			  <td class="table-input">
+				  <input id="demo-clothing-jeans" name="clothing" value="jeans" type="checkbox"><label for="demo-clothing-jeans">Jeans</label>
+				  <input id="demo-clothing-flanel" name="clothing" value="flanel" type="checkbox"><label for="demo-clothing-flanel">Flanel shirt</label>
+				  <input id="demo-clothing-beanie" name="clothing" value="beanie" type="checkbox"><label for="demo-clothing-beanie">Beanie</label>
+			  </td>
+			  <td class="table-toggle"><input type="checkbox" id="demo-activate-clothing" data-param="clothing" checked><label for="demo-activate-clothing">Active</label></td>
 		  </tr>
 		  <tr>
 			  <td colspan="3"><button id="demo-action-stop-all">Stop syncrhonizing URL</button></td>
@@ -119,7 +127,9 @@
 	color: document.getElementById( 'demo-color' ),
 	commute: document.getElementById( 'demo-commute' ),
 	like: document.getElementById( 'demo-like' ),
-	workpref: document.getElementsByName( 'workpref' )
+	// NodeList:
+	workpref: document.getElementsByName( 'workpref' ),
+	clothing: document.getElementsByName( 'clothing' )
 } );</code></pre>
 
     </main>
@@ -169,7 +179,8 @@
   			color: document.getElementById( 'demo-color' ),
   			commute: document.getElementById( 'demo-commute' ),
   			like: document.getElementById( 'demo-like' ),
-  			workpref: document.getElementsByName( 'workpref' )
+  			workpref: document.getElementsByName( 'workpref' ),
+            clothing: document.getElementsByName( 'clothing' )
   		} );
 
   		updateStopAllToggleLabel( false );

@@ -32,6 +32,16 @@ h2, h3 {
 	position: fixed;
 	margin-top: 5em;
 }
+
+.fr-page-demos .container td {
+	vertical-align: top;
+	padding: 1em;
+}
+
+.fr-page-demos .container td .btn-primary:not(:disabled):not(.disabled).active, .btn-primary:not(:disabled):not(.disabled):active {
+	background-color: #101b84;
+}
+
 @media (min-width: 576px) {
 	.fr-page-documentation main.container {
 		padding-left: 10em;
