@@ -48,7 +48,10 @@
 	fr.Controller.prototype.updateURL = function ( fullQuery ) {
 		/* istanbul ignore if  */
 		if ( !fr.TESTING ) {
-			window.history.pushState(
+			// TODO: Fix this;
+			// Using replaceState here as a stopgap for
+			// https://github.com/mooeypoo/formurlator/issues/3
+			window.history.replaceState(
 				window.document.title,
 				{ formurlator: 'formurlator' },
 				'?' + this.getQueryToString( fullQuery )
