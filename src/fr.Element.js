@@ -46,20 +46,11 @@
 			DOMElement instanceof NodeList
 		) {
 			this.element = DOMElement;
-			// TODO: Figure out how to create a NodeList
-			// in memory, so we can test below
-			/* istanbul ignore if  */
-			if ( DOMElement instanceof NodeList ) {
-				// Transform into an array
-				this.element = [];
-				for ( i = 0; i < DOMElement.length; i++ ) {
-					this.element.push( DOMElement[ i ] );
-				}
-			}
 			// Array of radio buttons or checkboxes
 
 			// Sanity check: Filter only to the same type
-			this.element = this.element.filter( function ( el ) {
+			// And on the way, transform into an array
+			this.element = Array.prototype.filter.call( this.element, function ( el ) {
 				return el.type === DOMElement[ 0 ].type;
 			} );
 
