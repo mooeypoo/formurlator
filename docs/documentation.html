@@ -182,6 +182,11 @@
 
 	  <p>This DOM element, when given to the system, will produce a url parameter <code>?color=xx,yy,zz</code> where the values are always from the given values in the options.</p>
 
+	  <h2>Updating an Element value</h2>
+	  <p>There might be times where you'd like to specifically update an element value. In these cases, you can use:
+	  <pre><code class="javascript language-javascript">formurlator.set( 'name', newValue );</code></pre>
+	  <p>This will change the DOM element and the URL query both. It might be useful when you have external JS code that needs to call for specific DOM value changes and may not trigger the 'change' event for the element.</p>
+
 	  <h2>Starting / stopping</h2>
 
 	  <p>By default, the system will start synchronizing immediately. You can stop listening for individual elements by calling <code>formurlator.stop( [param-name] )</code>:</p>
