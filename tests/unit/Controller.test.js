@@ -93,6 +93,39 @@
 		);
 	} );
 
+	QUnit.test( 'setValue', function ( assert ) {
+		var controller = new fr.Controller();
+
+		controller.add( {
+			check: getDOMElement( '<input type="checkbox" checked>' ),
+			str: getDOMElement( '<input type="text" value="foo">' )
+		} );
+		assert.deepEqual(
+			{
+				check: controller.manager.getValue( 'check' ),
+				str: controller.manager.getValue( 'str' )
+			},
+			{
+				check: true,
+				str: 'foo'
+			},
+			'Initial values as expected'
+		);
+
+		controller.setValue( 'str', 'bar' );
+		assert.deepEqual(
+			{
+				check: controller.manager.getValue( 'check' ),
+				str: controller.manager.getValue( 'str' )
+			},
+			{
+				check: true,
+				str: 'bar'
+			},
+			'Calling "set" changed the requested value'
+		);
+	} );
+
 	QUnit.test( 'start / stop', function ( assert ) {
 		var controller,
 			definition = {

@@ -41,6 +41,19 @@
 	};
 
 	/**
+	 * Directly set and update a DOM value
+	 *
+	 * @param  {string} name Element name
+	 * @param  {string|number|boolean} value Element value
+	 */
+	fr.Controller.prototype.setValue = function ( name, value ) {
+		var obj = {};
+
+		obj[ name ] = value;
+		this.manager.setValues( obj );
+	};
+
+	/**
 	 * Update the URL based on given query object
 	 *
 	 * @param {Object} fullQuery Full query parameters

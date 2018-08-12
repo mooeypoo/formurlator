@@ -2,6 +2,7 @@
 	var instance = new fr.Controller();
 	return {
 		add: instance.add.bind( instance ),
+		set: instance.setValue.bind( instance ),
 		stop: instance.stop.bind( instance ),
 		start: instance.start.bind( instance ),
 		// connect: instance.connect,
