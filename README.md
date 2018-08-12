@@ -28,3 +28,7 @@ In development, jQuery and QUnit are used to run the tests and coverage reports.
 ## License and Author
 Written by Moriel Schottlender, license MIT.
 Please feel free to fork, contribute, and submit issues if needed.
+
+## Change Log
+### v0.1.1
+* Add <code>formurlator.set( name, value )</code> to the public API, allowing to change an element value.
