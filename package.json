@@ -1,6 +1,6 @@
 {
   "name": "formurlator",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A system to connect form elements to URL query and synchronize them",
   "scripts": {
     "test": "grunt test",
